@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+        - REPOSITORY_URI=shishirkhandelwal/poc
+        - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+        - IMAGE_TAG=${COMMIT_HASH:=latest}
+        - docker login -u $username_docker -p $password_docker
+        - docker build -t $REPOSITORY_URI:latest .
+        - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+        - docker push $REPOSITORY_URI:latest
